@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("Starting web server")
 
 	webServer := sonda.WebServer{Port: 7777}
-	go webServer.Init()
+	webServer.Init()
 
 	fmt.Println("GPIO init")
 
