@@ -14,7 +14,7 @@ var directionPulsesCounter int
 var direction int
 
 func main() {
-	runtime.GOMAXPROCS(5)
+	runtime.GOMAXPROCS(10)
 
 	fmt.Println("Starting web server")
 
@@ -23,17 +23,17 @@ func main() {
 
 	fmt.Println("GPIO init")
 
-	gpio := sonda.GPIO{SpeedPin: 25, DirectionPin: 17}
+	gpio := sonda.GPIO{SpeedPin: 17, DirectionPin: 25}
 	gpio.Init()
 	//defer gpio.Stop()
 
-	filteredPulsesByTimes :=  make(chan sonda.Pulse)
-	filteredPulsesByLogic :=  make(chan sonda.Pulse)
+	filteredPulsesByTimes := make(chan sonda.Pulse)
+	filteredPulsesByLogic := make(chan sonda.Pulse)
 
 	go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
 	go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
-	go printResults(*webServer)
+	go printResults(&webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0

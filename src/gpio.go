@@ -16,10 +16,10 @@ type GPIO struct {
 }
 
 func (g *GPIO) Init() {
+	g.Channel = make(chan Pulse)
 	if err := embd.InitGPIO(); err != nil {
 		panic(err)
 	}
-
 	g.initSpeed()
 	g.initDirection()
 }
@@ -57,7 +57,7 @@ func (g *GPIO) initDirection() {
 	g.digitalDirectionPin.ActiveLow(false)
 
 	err = g.digitalDirectionPin.Watch(embd.EdgeRising, func(direction embd.DigitalPin) {
-		g.Channel <- Pulse{Long: false, At: time.Now()}
+		g.Channel <- Pulse{Long: true, At: time.Now()}
 	})
 	if err != nil {
 		panic(err)
