@@ -118,7 +118,7 @@ var homeTemplate = template.Must(template.New("").Parse(`
     </div>
 
 
-    <div class="hidden-sm-down" id="info">
+    <div class="hidden-sm-down" id="info" style="display: none;">
     <br /><br />
 
     <div class="row">
