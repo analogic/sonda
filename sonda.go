@@ -60,10 +60,10 @@ func main() {
 
 func printResults(w *sonda.WebServer) {
 	for {
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Second * 1)
 		fmt.Println("\033[1;34m")
 
-		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500))) / 3
+		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
 		fmt.Printf("%v pulses, %v direction", speed, direction)
 		fmt.Println("\033[0m")
 
