@@ -70,11 +70,11 @@ func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
 
 
 func (w *WebServer) json(rw http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, w.DataJson)
+	fmt.Fprintln(rw, w.DataJson)
 }
 
 func (w *WebServer) home(rw http.ResponseWriter, r *http.Request) {
-	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
+	homeTemplate.Execute(rw, "ws://"+r.Host+"/echo")
 }
 
 var homeTemplate = template.Must(template.New("").Parse(`

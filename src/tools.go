@@ -14,7 +14,7 @@ func AverageSpeed(s *[]float32) float32 {
 
 func MaxSpeed(s *[]float32) float32 {
 	// TODO proper gust calculation
-	max := *s[0]
+	max := (*s)[0]
 	for _, v := range *s {
 		if v > max {
 			max = v
@@ -32,7 +32,7 @@ func AverageDirection(d *[]int) int {
 		coss = append(coss, math.Cos(Rad(float64(direction))))
 	}
 
-	return int(Deg(math.Atan2(SumFloat64(&sins) / len(sins), SumFloat64(&coss) / len(coss))))
+	return int(Deg(math.Atan2(SumFloat64(&sins) / float64(len(sins)), SumFloat64(&coss) / float64(len(coss)))))
 }
 
 func SumFloat64(a *[]float64) float64 {
