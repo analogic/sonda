@@ -14,12 +14,12 @@ var directionPulsesCounter int
 var direction int
 
 func main() {
-	runtime.GOMAXPROCS(10)
+	runtime.GOMAXPROCS(4)
 
 	fmt.Println("Starting web server")
 
 	webServer := sonda.WebServer{Port: 7777}
-	go webServer.Init()
+	webServer.Init()
 
 	fmt.Println("GPIO init")
 
@@ -51,7 +51,6 @@ func main() {
 		} else {
 			speedPulsesCounter++
 		}
-
 
 		if speedPulsesCounter == 36 {
 			direction = ((directionPulsesCounter * 10) + 70) % 360

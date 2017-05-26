@@ -13,6 +13,7 @@ import (
 type WebServer struct {
 	Port 	int
 	WebSocket chan string
+	WSClients []websocket.Conn
 }
 
 func (w *WebServer) Init() {
@@ -20,11 +21,39 @@ func (w *WebServer) Init() {
 	log.SetFlags(0)
 	http.HandleFunc("/ws", w.ws)
 	http.HandleFunc("/", home)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
+	go w.initWebSocket()
+}
+
+func (w *WebServer) initWebSocket() {
 	w.WebSocket = make(chan string)
-	go log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
+
+	for message := range w.WebSocket {
+		for c := range w.WSClients {
+			err := c.WriteMessage(1, []byte(message))
+			if err != nil {
+				w.closeWs(c)
+			}
+		}
+	}
 }
 
 var upgrader = websocket.Upgrader{} // use default options
+
+func (w *WebServer) closeWs(c *websocket.Conn) {
+	for i, v := range w.WSClients {
+		if v == "two" {
+			w.WSClients = append(w.WSClients[:i], w.WSClients[i+1:]...)
+			break
+		}
+	}
+	c.Close()
+}
+
+func (w *WebServer) addWs(c *websocket.Conn) {
+	w.WSClients = append(w.WSClients, c)
+	c.Close()
+}
 
 func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(rw, r, nil)
@@ -32,14 +61,7 @@ func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
 		log.Print("upgrade:", err)
 		return
 	}
-	defer c.Close()
-	for message := range w.WebSocket {
-		err = c.WriteMessage(1, []byte(message))
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
+	w.addWs(c);
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
