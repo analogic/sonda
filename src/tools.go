@@ -3,12 +3,13 @@ package sonda
 import "math"
 
 func AverageSpeed(s *[]float32) float32 {
-	speedSum := 0.0
+	var speedSum float32
+	speedSum = 0
 	for _, num := range *s {
 		speedSum += num
 	}
 
-	return speedSum / len(*s)
+	return speedSum / float32(len(*s))
 }
 
 func MaxSpeed(s *[]float32) float32 {
@@ -27,11 +28,11 @@ func AverageDirection(d *[]int) int {
 	var coss []float64
 
 	for _, direction := range *d {
-		sins = append(sins, math.Sin(Rad(direction)))
-		coss = append(coss, math.Cos(Rad(direction)))
+		sins = append(sins, math.Sin(Rad(float64(direction))))
+		coss = append(coss, math.Cos(Rad(float64(direction))))
 	}
 
-	return Deg(math.Atan2(SumFloat64(sins) / len(sins), SumFloat64(coss) / len(coss)))
+	return int(Deg(math.Atan2(SumFloat64(&sins) / len(sins), SumFloat64(&coss) / len(coss))))
 }
 
 func SumFloat64(a *[]float64) float64 {
