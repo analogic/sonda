@@ -36,7 +36,7 @@ func main() {
 	go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
 	go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
-	go printAverages(&webServer)
+	go printResults(&webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
