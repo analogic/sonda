@@ -87,6 +87,7 @@ func printResults(w *sonda.WebServer) {
 			printAverages(w)
 			counter = 0
 		}
+		counter++
 	}
 }
 
@@ -96,4 +97,5 @@ func printAverages(w *sonda.WebServer) {
 		sonda.MaxSpeed(&speeds),
 		sonda.AverageDirection(&directions),
 		0, 0, 0, "aaaa")
+	fmt.Print(w.DataJson)
 }
