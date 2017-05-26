@@ -3,6 +3,10 @@ package sonda
 import "math"
 
 func AverageSpeed(s *[]float32) float32 {
+	if(len(*s) == 0) {
+		return float32(0)
+	}
+
 	var speedSum float32
 	speedSum = 0
 	for _, num := range *s {
@@ -14,6 +18,10 @@ func AverageSpeed(s *[]float32) float32 {
 
 func MaxSpeed(s *[]float32) float32 {
 	// TODO proper gust calculation
+	if(len(*s) == 0) {
+		return float32(0)
+	}
+
 	max := (*s)[0]
 	for _, v := range *s {
 		if v > max {
@@ -24,6 +32,10 @@ func MaxSpeed(s *[]float32) float32 {
 }
 
 func AverageDirection(d *[]int) int {
+	if(len(*d) == 0) {
+		return 0
+	}
+
 	var sins []float64
 	var coss []float64
 
