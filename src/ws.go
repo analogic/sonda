@@ -237,7 +237,7 @@ var homeTemplate = template.Must(template.New("").Parse(`
 		document.getElementById('temperature_cpu').innerHTML = obj.temperature_cpu.toFixed(0) + "°C";
 		document.getElementById('temperature_gpu').innerHTML = obj.temperature_gpu.toFixed(0) + "°C";
 		document.getElementById('load').innerHTML = obj.load;
-		document.getElementById('uptime').innerHTML = convert(obj.uptime);
+		document.getElementById('uptime').innerHTML = convert(intval(str.substring(obj.uptime.indexOf(".") + 1)));
 	    }
 	}
 
