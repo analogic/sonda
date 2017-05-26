@@ -13,7 +13,7 @@ import (
 type WebServer struct {
 	Port 	int
 	WebSocket chan string
-	WSClients []websocket.Conn
+	WSClients []*websocket.Conn
 }
 
 func (w *WebServer) Init() {
@@ -42,7 +42,7 @@ var upgrader = websocket.Upgrader{} // use default options
 
 func (w *WebServer) closeWs(c *websocket.Conn) {
 	for i, v := range w.WSClients {
-		if v == "two" {
+		if v == c {
 			w.WSClients = append(w.WSClients[:i], w.WSClients[i+1:]...)
 			break
 		}
