@@ -21,8 +21,8 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 	var lastDirectionPulse Pulse
 	var lastSpeedPulse Pulse
 
-	var diffs []int
-	var min int
+	var diffs []int64
+	var min int64
 
 	for current := range inputPulses {
 
