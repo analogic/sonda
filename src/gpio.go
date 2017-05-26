@@ -20,8 +20,8 @@ func (g *GPIO) Init() {
 		panic(err)
 	}
 
-	go g.initSpeed()
-	go g.initDirection()
+	g.initSpeed()
+	g.initDirection()
 }
 
 func (g *GPIO) initSpeed() {

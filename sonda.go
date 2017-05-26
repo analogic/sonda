@@ -24,10 +24,8 @@ func main() {
 	fmt.Println("GPIO init")
 
 	gpio := sonda.GPIO{SpeedPin: 25, DirectionPin: 17}
-	defer gpio.Stop()
-
-	fmt.Println("Starting listening")
-	go gpio.Init()
+	gpio.Init()
+	//defer gpio.Stop()
 
 	filteredPulsesByTimes :=  make(chan sonda.Pulse)
 	filteredPulsesByLogic :=  make(chan sonda.Pulse)
@@ -35,20 +33,7 @@ func main() {
 	go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
 	go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
-	go printResults(webServer)
-
-	for {
-		time.Sleep(time.Second * 3)
-		fmt.Println("\033[1;34m")
-
-		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500))) / 3
-		fmt.Printf("%v pulses, %v direction", speed, direction)
-
-		fmt.Println("\033[0m")
-
-		speedPulsesCounter = 0
-		directionPulsesCounter = 0
-	}
+	go printResults(*webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
@@ -83,7 +68,7 @@ func printResults(w *sonda.WebServer) {
 		fmt.Printf("%v pulses, %v direction", speed, direction)
 		fmt.Println("\033[0m")
 
-		w.WebSocket <- fmt.Sprint("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
+		w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
 
 		speedPulsesCounter = 0
 		directionPulsesCounter = 0

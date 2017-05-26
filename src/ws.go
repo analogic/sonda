@@ -33,13 +33,11 @@ func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer c.Close()
-	for {
-		for message := range w.WebSocket {
-			err = c.WriteMessage(1, []byte(message))
-			if err != nil {
-				log.Println("write:", err)
-				break
-			}
+	for message := range w.WebSocket {
+		err = c.WriteMessage(1, []byte(message))
+		if err != nil {
+			log.Println("write:", err)
+			break
 		}
 	}
 }
