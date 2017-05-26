@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
-	"regexp"
 )
 
 var speedPulsesCounter int
@@ -103,9 +102,9 @@ func printAverages(w *sonda.WebServer) {
 		sonda.AverageSpeed(&speeds),
 		sonda.MaxSpeed(&speeds),
 		sonda.AverageDirection(&directions),
-		strconv.ParseInt(tcpu, 10, 64),
+		strconv.ParseInt(string(tcpu), 10, 64),
 		0,
-		loadRaw,
-		uptimeRaw)
+		string(loadRaw),
+		string(uptimeRaw))
 	fmt.Print(w.DataJson)
 }
