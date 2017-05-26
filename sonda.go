@@ -13,6 +13,9 @@ var speedPulsesCounter int
 var directionPulsesCounter int
 var direction int
 
+var speeds []float32
+var directions []int
+
 func main() {
 	runtime.GOMAXPROCS(4)
 
@@ -33,7 +36,7 @@ func main() {
 	go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
 	go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
-	go printResults(&webServer)
+	go printAverages(&webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
@@ -65,15 +68,32 @@ func main() {
 }
 
 func printResults(w *sonda.WebServer) {
+	counter := 0
 	for {
 		time.Sleep(time.Second * 1)
 
 		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
 		fmt.Printf("\n\033[1;34m%v pulses, %v direction\033[0m\n", speed, direction)
 
+		speeds = append(speeds, speed)
+		directions = append(directions, direction)
+
 		w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
 
 		speedPulsesCounter = 0
 		directionPulsesCounter = 0
+
+		if(counter == 60) {
+			printAverages(w)
+			counter = 0
+		}
 	}
+}
+
+func printAverages(w *sonda.WebServer) {
+	w.DataJson = fmt.Sprintf("{\"speed_average\": %v, \"speed_max\": %v, \"direction_average\": %v, \"temperature_cpu\": %v, \"temperature_gpu\": %v, \"load\": %v, \"uptime\": %v}",
+		sonda.AverageSpeed(&speeds),
+		sonda.MaxSpeed(&speeds),
+		sonda.AverageDirection(&directions),
+		0, 0, 0, "aaaa")
 }

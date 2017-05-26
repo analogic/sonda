@@ -13,6 +13,7 @@ import (
 type WebServer struct {
 	Port 	int
 	WebSocket chan string
+	DataJson string
 	WSClients []*websocket.Conn
 }
 
@@ -23,9 +24,12 @@ func (w *WebServer) Init() {
 	flag.Parse()
 	log.SetFlags(0)
 	http.HandleFunc("/ws", w.ws)
-	http.HandleFunc("/", home)
+	http.HandleFunc("/data.json", w.json)
+	http.HandleFunc("/", w.home)
 	go w.initWebSocket()
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
+
 }
 
 func (w *WebServer) initWebSocket() {
@@ -64,7 +68,12 @@ func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
 	w.addWs(c);
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+
+func (w *WebServer) json(rw http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, w.DataJson)
+}
+
+func (w *WebServer) home(rw http.ResponseWriter, r *http.Request) {
 	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
 }
 
