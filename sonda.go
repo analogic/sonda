@@ -109,4 +109,7 @@ func printAverages(w *sonda.WebServer) {
 		strings.TrimSpace(string(loadRaw)),
 		strings.TrimSpace(string(uptimeRaw)))
 	fmt.Print(w.DataJson)
+
+	speeds = []float32{}
+	directions = []int{}
 }
