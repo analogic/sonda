@@ -53,7 +53,11 @@ func main() {
 		}
 
 		if speedPulsesCounter == 36 {
-			direction = ((directionPulsesCounter * 10) + 70) % 360
+			newDirection := ((directionPulsesCounter * 10) + 70) % 360
+
+			if(newDirection != 80 && newDirection != 70) {
+				direction = newDirection
+			}
 		}
 	}
 }
@@ -61,11 +65,9 @@ func main() {
 func printResults(w *sonda.WebServer) {
 	for {
 		time.Sleep(time.Second * 1)
-		fmt.Println("\033[1;34m")
 
 		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
-		fmt.Printf("%v pulses, %v direction", speed, direction)
-		fmt.Println("\033[0m")
+		fmt.Printf("\n\033[1;34m%v pulses, %v direction\033[0m\n", speed, direction)
 
 		w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
 

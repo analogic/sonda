@@ -1,7 +1,5 @@
 package sonda
 
-
-
 func FilterPulsesByLogic(inputPulses chan Pulse, outputPulses chan Pulse) {
 	defer close(outputPulses)
 	last := Pulse{Long: true}
@@ -19,15 +17,18 @@ func FilterPulsesByLogic(inputPulses chan Pulse, outputPulses chan Pulse) {
 
 func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 	defer close(outputPulses)
-	var buffer []Pulse
+
+	var lastDirectionPulse Pulse
+	var lastSpeedPulse Pulse
+
+	var diffs []int
+	var min int
 
 	for current := range inputPulses {
 
-		if len(buffer) == 2 &&
+		if len(diffs) > 30 &&
 			!current.Long &&
-			current.At.Sub(buffer[1].At).Nanoseconds() < (buffer[1].At.Sub(buffer[0].At).Nanoseconds() / 10) * 7 {
-
-			//fmt.Printf("\ndiff: %v, previous: %v\n", current.at.Sub(buffer[1].at).Nanoseconds() , (buffer[1].at.Sub(buffer[0].at).Nanoseconds() / 10) * 7)
+			(lastSpeedPulse.At.Nanosecond() - current.At.Nanosecond() < min) {
 
 			current.Invalid = true
 			current.Reason = "t"
@@ -35,11 +36,25 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 
 		outputPulses <- current
 
-		if !current.Long && !current.Invalid {
-			if len(buffer) > 1 {
-				buffer = append(buffer[1:], current)
+		if current.Long {
+			if len(diffs) > 30 {
+				diffs = append(diffs[1:], current.At.Nanosecond() - lastDirectionPulse.At.Nanosecond())
 			} else {
-				buffer = append(buffer, current)
+				diffs = append(diffs, current.At.Nanosecond() - lastDirectionPulse.At.Nanosecond())
+			}
+
+			n := diffs[0]
+			// find smallest
+			for _, v := range diffs {
+				if v < n {
+					n = v
+				}
+			}
+			min = n
+			lastDirectionPulse = current
+		} else {
+			if(!current.Invalid) {
+				lastSpeedPulse = current
 			}
 		}
 	}
