@@ -94,7 +94,8 @@ func printResults(w *sonda.WebServer) {
 }
 
 func printAverages(w *sonda.WebServer) {
-	tcpu, _ := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
+	tcpuRaw, _ := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
+	tcpu, _ := strconv.ParseInt(string(tcpuRaw), 10, 64)
 	loadRaw, _ := ioutil.ReadFile("/proc/loadavg")
 	uptimeRaw, _ := ioutil.ReadFile("/proc/uptime")
 
@@ -102,7 +103,7 @@ func printAverages(w *sonda.WebServer) {
 		sonda.AverageSpeed(&speeds),
 		sonda.MaxSpeed(&speeds),
 		sonda.AverageDirection(&directions),
-		strconv.ParseInt(string(tcpu), 10, 64),
+		tcpu,
 		0,
 		string(loadRaw),
 		string(uptimeRaw))
