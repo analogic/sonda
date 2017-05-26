@@ -55,7 +55,9 @@ func main() {
 		if speedPulsesCounter == 36 {
 			newDirection := ((directionPulsesCounter * 10) + 70) % 360
 
-			if(newDirection != 80 && newDirection != 70) {
+			if (newDirection == 80 || newDirection == 60 || newDirection == 70) && direction > 140 {
+				// do nothing, anemometr bug
+			} else {
 				direction = newDirection
 			}
 		}
