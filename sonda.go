@@ -99,7 +99,7 @@ func printAverages(w *sonda.WebServer) {
 	loadRaw, _ := ioutil.ReadFile("/proc/loadavg")
 	uptimeRaw, _ := ioutil.ReadFile("/proc/uptime")
 
-	w.DataJson = fmt.Sprintf("{\"speed_average\": %v, \"speed_max\": %v, \"direction_average\": %v, \"temperature_cpu\": %v, \"temperature_gpu\": %v, \"load\": %v, \"uptime\": %v}",
+	w.DataJson = fmt.Sprintf("{\"speed_average\": %v, \"speed_max\": %v, \"direction_average\": %v, \"temperature_cpu\": %v, \"temperature_gpu\": %v, \"load\": \"%v\", \"uptime\": \"%v\"}",
 		sonda.AverageSpeed(&speeds),
 		sonda.MaxSpeed(&speeds),
 		sonda.AverageDirection(&directions),
