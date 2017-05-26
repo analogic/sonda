@@ -17,9 +17,10 @@ func main() {
 	fmt.Println("GPIO init")
 
 	gpio := sonda.GPIO{SpeedPin: 17, DirectionPin: 25}
-	gpio.Init()
+	defer gpio.Stop()
 
 	fmt.Println("Starting listening")
+	gpio.Init()
 
 	// true - long pulse, false - short pulse
 
