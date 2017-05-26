@@ -28,7 +28,7 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 
 		if len(diffs) > 30 &&
 			!current.Long &&
-			(lastSpeedPulse.At.Nanosecond() - current.At.Nanosecond() < min) {
+			(lastSpeedPulse.At.Nanosecond() - current.At.Nanosecond() < (min * 7)/10) {
 
 			current.Invalid = true
 			current.Reason = "t"
