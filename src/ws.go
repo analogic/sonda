@@ -17,6 +17,9 @@ type WebServer struct {
 }
 
 func (w *WebServer) Init() {
+	w.WebSocket = make(chan string)
+	w.WSClients = make([]*websocket.Conn, 0)
+
 	flag.Parse()
 	log.SetFlags(0)
 	http.HandleFunc("/ws", w.ws)
@@ -26,8 +29,6 @@ func (w *WebServer) Init() {
 }
 
 func (w *WebServer) initWebSocket() {
-	w.WebSocket = make(chan string)
-
 	for message := range w.WebSocket {
 		for _, c := range w.WSClients {
 			err := c.WriteMessage(1, []byte(message))
