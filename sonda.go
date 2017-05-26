@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"strings"
 )
 
 var speedPulsesCounter int
@@ -105,7 +106,7 @@ func printAverages(w *sonda.WebServer) {
 		sonda.AverageDirection(&directions),
 		tcpu,
 		0,
-		string(loadRaw),
-		string(uptimeRaw))
+		strings.TrimSpace(string(loadRaw)),
+		strings.TrimSpace(string(uptimeRaw)))
 	fmt.Print(w.DataJson)
 }
