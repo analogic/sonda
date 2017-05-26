@@ -5,7 +5,6 @@ import (
 	_ "github.com/kidoman/embd/host/all"
 
 	"time"
-	"fmt"
 )
 
 type GPIO struct {
@@ -38,7 +37,6 @@ func (g *GPIO) initSpeed() {
 	g.digitalSpeedPin.ActiveLow(false)
 
 	err = g.digitalSpeedPin.Watch(embd.EdgeRising, func(speed embd.DigitalPin) {
-		fmt.Println("Pulse!")
 		g.Channel <- Pulse{Long: false, At: time.Now()}
 	})
 	if err != nil {
@@ -59,7 +57,6 @@ func (g *GPIO) initDirection() {
 	g.digitalDirectionPin.ActiveLow(false)
 
 	err = g.digitalDirectionPin.Watch(embd.EdgeRising, func(direction embd.DigitalPin) {
-		fmt.Println("Pulse!")
 		g.Channel <- Pulse{Long: false, At: time.Now()}
 	})
 	if err != nil {
@@ -71,7 +68,7 @@ func (g *GPIO) Stop() {
 	close(g.Channel)
 
 	g.digitalDirectionPin.Close()
-	g.digitalDirectionPin.Close()
+	g.digitalSpeedPin.Close()
 
 	embd.CloseGPIO()
 }
