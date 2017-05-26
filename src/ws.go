@@ -29,7 +29,7 @@ func (w *WebServer) initWebSocket() {
 	w.WebSocket = make(chan string)
 
 	for message := range w.WebSocket {
-		for c := range w.WSClients {
+		for _, c := range w.WSClients {
 			err := c.WriteMessage(1, []byte(message))
 			if err != nil {
 				w.closeWs(c)
