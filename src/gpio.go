@@ -2,6 +2,8 @@ package sonda
 
 import (
 	"github.com/kidoman/embd"
+	_ "github.com/kidoman/embd/host/all"
+
 	"time"
 )
 
