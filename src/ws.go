@@ -53,7 +53,6 @@ func (w *WebServer) closeWs(c *websocket.Conn) {
 
 func (w *WebServer) addWs(c *websocket.Conn) {
 	w.WSClients = append(w.WSClients, c)
-	c.Close()
 }
 
 func (w *WebServer) ws(rw http.ResponseWriter, r *http.Request) {
