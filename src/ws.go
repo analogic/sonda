@@ -21,7 +21,7 @@ func (w *WebServer) Init() {
 	log.SetFlags(0)
 	http.HandleFunc("/ws", w.ws)
 	http.HandleFunc("/", home)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
+	go log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
 	go w.initWebSocket()
 }
 
