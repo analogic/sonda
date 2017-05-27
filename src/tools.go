@@ -44,7 +44,12 @@ func AverageDirection(d *[]int) int {
 		coss = append(coss, math.Cos(Rad(float64(direction))))
 	}
 
-	return int(Deg(math.Atan2(SumFloat64(&sins) / float64(len(sins)), SumFloat64(&coss) / float64(len(coss))))) % 360
+	avg := int(Deg(math.Atan2(SumFloat64(&sins) / float64(len(sins)), SumFloat64(&coss) / float64(len(coss)))))
+	if avg < 0 {
+		return avg + 360
+	} else {
+		return avg
+	}
 }
 
 func SumFloat64(a *[]float64) float64 {
