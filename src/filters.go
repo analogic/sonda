@@ -43,7 +43,7 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 				diffs = append(diffs, current.At.Sub(lastDirectionPulse.At).Nanoseconds())
 			}
 
-			min := diffs[0]
+			min = diffs[0]
 			// find smallest
 			for _, v := range diffs {
 				if v < min {
