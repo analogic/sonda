@@ -1,5 +1,7 @@
 package sonda
 
+//import "fmt"
+
 func FilterPulsesByLogic(inputPulses chan Pulse, outputPulses chan Pulse) {
 	defer close(outputPulses)
 	last := Pulse{Long: true}
@@ -24,6 +26,8 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 	var diffs []int64
 	var min int64
 
+//        var cnt = 0;
+
 	for current := range inputPulses {
 
 		if len(diffs) > 30 &&
@@ -34,11 +38,19 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 			current.Reason = "t"
 		}
 
+//                cnt++
+//                if(cnt == 36) {
+//                fmt.Printf("min: %v cur: %v\n", min, current.At.Sub(lastSpeedPulse.At).Nanoseconds());
+//                cnt = 0
+//                }
 		outputPulses <- current
 
 		if current.Long {
 			if len(diffs) > 30 {
-				diffs = append(diffs[1:], current.At.Sub(lastDirectionPulse.At).Nanoseconds())
+				n := current.At.Sub(lastDirectionPulse.At).Nanoseconds()
+				//if n < 3*min {
+					diffs = append(diffs[1:], n)
+				//}
 			} else {
 				diffs = append(diffs, current.At.Sub(lastDirectionPulse.At).Nanoseconds())
 			}

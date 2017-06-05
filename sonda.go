@@ -2,7 +2,7 @@ package main
 
 import (
 	//"fmt"
-	"runtime"
+//	"runtime"
 	//"time"
 	"sonda/src"
 	"time"
@@ -20,7 +20,7 @@ var speeds []float32
 var directions []int
 
 func main() {
-	runtime.GOMAXPROCS(4)
+//	runtime.GOMAXPROCS(4)
 
 	fmt.Println("Starting web server")
 
