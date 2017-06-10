@@ -114,7 +114,7 @@ func printAverages(w *sonda.WebServer) {
 	directions = []int{}
 }
 
-func raspiLoad() float32 {
+func raspiLoad() float64 {
 	line, err := ioutil.ReadFile("/proc/loadavg")
 	if err != nil {
 		return 0.0
@@ -136,7 +136,7 @@ func raspiUptime() float64 {
 	return float64(sysinfo.Uptime)
 }
 
-func raspiCpuTemp() float32 {
+func raspiCpuTemp() float64 {
 	tcpuRaw, err := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
 	if err != nil {
 		return 0.0
@@ -147,7 +147,7 @@ func raspiCpuTemp() float32 {
 	return raw / 1000
 }
 
-func raspiGpuTemp() float32 {
+func raspiGpuTemp() float64 {
 	out, err := exec.Command("/opt/vc/bin/vcgencmd", "measure_temp").Output()
 	if err != nil {
 		log.Fatal(err)
