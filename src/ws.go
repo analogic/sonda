@@ -127,7 +127,7 @@ var homeTemplate = template.Must(template.New("").Parse(`
        <h4 id="temperature_cpu">&nbsp;</h4>
        </div>
 
-       <div class="col-6">
+       <div class="col-6" style="display: none;">
        <p>Teplota GPU</p>
        <h4 id="temperature_gpu">&nbsp;</h4>
        </div>
