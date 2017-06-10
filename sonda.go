@@ -10,6 +10,11 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	_ "net/http/pprof"
+	"syscall"
+	"os/exec"
+	"log"
 )
 
 var speedPulsesCounter int
@@ -26,6 +31,7 @@ func main() {
 
 	webServer := sonda.WebServer{Port: 80}
 	go webServer.Init()
+	go raspiStatus()
 
 	fmt.Println("GPIO init")
 
@@ -95,21 +101,60 @@ func printResults(w *sonda.WebServer) {
 }
 
 func printAverages(w *sonda.WebServer) {
-	tcpuRaw, _ := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
-	tcpu, _ := strconv.ParseInt(string(tcpuRaw), 10, 64)
-	loadRaw, _ := ioutil.ReadFile("/proc/loadavg")
-	uptimeRaw, _ := ioutil.ReadFile("/proc/uptime")
-
 	w.DataJson = fmt.Sprintf("{\"speed_average\": %v, \"speed_max\": %v, \"direction_average\": %v, \"temperature_cpu\": %v, \"temperature_gpu\": %v, \"load\": \"%v\", \"uptime\": \"%v\"}",
 		sonda.AverageSpeed(&speeds),
 		sonda.MaxSpeed(&speeds),
 		sonda.AverageDirection(&directions),
-		tcpu,
-		0,
-		strings.TrimSpace(string(loadRaw)),
-		strings.TrimSpace(string(uptimeRaw)))
+		raspiCpuTemp(),
+		raspiGpuTemp(),
+		raspiLoad(),
+		raspiUptime())
 	fmt.Print(w.DataJson)
 
 	speeds = []float32{}
 	directions = []int{}
+}
+
+func raspiLoad() float32 {
+	line, err := ioutil.ReadFile("/proc/loadavg")
+	if err != nil {
+		return nil
+	}
+
+	fields := strings.Fields(string(line))
+	one, _ := strconv.ParseFloat(fields[0], 32)
+
+	return one
+}
+
+func raspiUptime() float64 {
+	sysinfo := syscall.Sysinfo_t{}
+
+	if err := syscall.Sysinfo(&sysinfo); err != nil {
+		return err
+	}
+
+	return float64(sysinfo.Uptime)
+}
+
+func raspiCpuTemp() float32 {
+	tcpuRaw, err := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
+	if err != nil {
+		return nil
+	}
+
+	raw, _ := strconv.ParseFloat(tcpuRaw, 32)
+
+	return raw / 1000
+}
+
+func raspiGpuTemp() float32 {
+	out, err := exec.Command("/opt/vc/bin/vcgencmd", "measure_temp").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("The date is %s\n", out)
+
+	raw, _ := strconv.ParseFloat(out[5:4], 32)
+	return raw;
 }

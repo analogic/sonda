@@ -24,6 +24,8 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 	var diffs []int64
 	var min int64
 
+	speedPulsesSinceLastDirectionPulse := 0
+
 	for current := range inputPulses {
 
 		if len(diffs) > 30 &&
@@ -37,10 +39,13 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 		outputPulses <- current
 
 		if current.Long {
-			if len(diffs) > 30 {
-				diffs = append(diffs[1:], current.At.Sub(lastDirectionPulse.At).Nanoseconds())
-			} else {
-				diffs = append(diffs, current.At.Sub(lastDirectionPulse.At).Nanoseconds())
+			// we will meassure only if there will be pulses close together, we will not meassure in 10° case
+			if speedPulsesSinceLastDirectionPulse < 3 {
+				if len(diffs) > 30 {
+					diffs = append(diffs[1:], current.At.Sub(lastDirectionPulse.At).Nanoseconds())
+				} else {
+					diffs = append(diffs, current.At.Sub(lastDirectionPulse.At).Nanoseconds())
+				}
 			}
 
 			min = diffs[0]
@@ -51,9 +56,11 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 				}
 			}
 			lastDirectionPulse = current
+			speedPulsesSinceLastDirectionPulse = 0;
 		} else {
 			if(!current.Invalid) {
 				lastSpeedPulse = current
+				speedPulsesSinceLastDirectionPulse++;
 			}
 		}
 	}
