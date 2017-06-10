@@ -142,7 +142,7 @@ func raspiCpuTemp() float64 {
 		return 0.0
 	}
 
-	raw, _ := strconv.ParseFloat(tcpuRaw, 32)
+	raw, _ := strconv.ParseFloat(string(tcpuRaw), 32)
 
 	return raw / 1000
 }
@@ -153,6 +153,6 @@ func raspiGpuTemp() float64 {
 		log.Fatal(err)
 	}
 
-	raw, _ := strconv.ParseFloat(out[5:4], 32)
+	raw, _ := strconv.ParseFloat(out[5:9], 32)
 	return raw;
 }
