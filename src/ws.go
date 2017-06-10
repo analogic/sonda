@@ -173,7 +173,7 @@ var homeTemplate = template.Must(template.New("").Parse(`
     </div>
 
     <hr />
-    <p class="help-block">Zdroj dat <a href="http://85.13.85.12/data.json">http://85.13.85.12/data.json</a></p>
+    <p class="help-block">Zdroj dat <a href="http://85.13.85.12/data.json">http://85.13.85.12/data.json</a>, <a href="/debug/pprof/">debug</a></p>
 
     <script src="http://code.highcharts.com/4.0.0/adapters/standalone-framework.js"></script>
     <script src="http://code.highcharts.com/4.0.0/highcharts.js"></script>
