@@ -40,6 +40,7 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 
 		if current.Long {
 			// we will meassure only if there will be pulses close together, we will not meassure in 10° case
+
 			if speedPulsesSinceLastDirectionPulse < 3 {
 				if len(diffs) > 30 {
 					diffs = append(diffs[1:], current.At.Sub(lastDirectionPulse.At).Nanoseconds())
