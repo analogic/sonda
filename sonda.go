@@ -31,7 +31,6 @@ func main() {
 
 	webServer := sonda.WebServer{Port: 80}
 	go webServer.Init()
-	go raspiStatus()
 
 	fmt.Println("GPIO init")
 
@@ -118,7 +117,7 @@ func printAverages(w *sonda.WebServer) {
 func raspiLoad() float32 {
 	line, err := ioutil.ReadFile("/proc/loadavg")
 	if err != nil {
-		return nil
+		return 0.0
 	}
 
 	fields := strings.Fields(string(line))
@@ -131,7 +130,7 @@ func raspiUptime() float64 {
 	sysinfo := syscall.Sysinfo_t{}
 
 	if err := syscall.Sysinfo(&sysinfo); err != nil {
-		return err
+		return 0.0
 	}
 
 	return float64(sysinfo.Uptime)
@@ -140,7 +139,7 @@ func raspiUptime() float64 {
 func raspiCpuTemp() float32 {
 	tcpuRaw, err := ioutil.ReadFile("/sys/class/thermal/thermal_zone0/temp")
 	if err != nil {
-		return nil
+		return 0.0
 	}
 
 	raw, _ := strconv.ParseFloat(tcpuRaw, 32)
@@ -153,7 +152,6 @@ func raspiGpuTemp() float32 {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("The date is %s\n", out)
 
 	raw, _ := strconv.ParseFloat(out[5:4], 32)
 	return raw;
