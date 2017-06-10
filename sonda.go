@@ -153,6 +153,6 @@ func raspiGpuTemp() float64 {
 		log.Fatal(err)
 	}
 
-	raw, _ := strconv.ParseFloat(out[5:9], 32)
+	raw, _ := strconv.ParseFloat(string(out)[5:9], 32)
 	return raw;
 }
