@@ -49,7 +49,7 @@ func FilterPulsesByTimes(inputPulses chan Pulse, outputPulses chan Pulse) {
 				}
 			}
 			
-			if len(diffs > 0) {
+			if len(diffs) > 0 {
 				min = diffs[0]
 			}
 			
