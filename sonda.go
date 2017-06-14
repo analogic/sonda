@@ -20,10 +20,10 @@ import (
 var speedPulsesCounter int
 var directionPulsesCounter int
 var threeSecSpeedPulsesCounter int
-var direction int
+var direction float32
 
 var speeds []float32
-var directions []int
+var directions []float32
 
 func main() {
 //	runtime.GOMAXPROCS(4)
@@ -88,7 +88,7 @@ func printResults(w *sonda.WebServer) {
 		time.Sleep(time.Second * 3)
 
 		speed := (float32(threeSecSpeedPulsesCounter) * (float32(30) / float32(1534))) / 3
-		direction := ((float32(directionPulsesCounter) / 3 * float32(10)) + float32(70) + float32(180))
+		direction = ((float32(directionPulsesCounter) / 3 * float32(10)) + float32(70) + float32(180))
 		fmt.Printf("\n\033[1;34m%vm/s, %v°\033[0m\n", speed, direction)
 
 		speeds = append(speeds, speed)
