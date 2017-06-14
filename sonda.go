@@ -53,6 +53,7 @@ func main() {
 
 	speedPulsesOnlyDelay = 0
 
+	previous := sonda.Pulse{Long: false}
 	//for p := range filteredPulsesByLogic {
 	for p := range gpio.Channel {
 
@@ -71,6 +72,10 @@ func main() {
 		} else {
 			speedPulsesCounter++
 			speedPulsesOnlyDelay++
+
+			if previous.Long != true {
+				fmt.Print(" ")
+			}
 		}
 
 		fmt.Print(p.String());
@@ -84,6 +89,8 @@ func main() {
 				direction = newDirection
 			///}
 		}
+
+		previous = p
 	}
 }
 
