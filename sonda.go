@@ -38,18 +38,20 @@ func main() {
 	gpio.Init()
 	//defer gpio.Stop()
 
-	filteredPulsesByTimes := make(chan sonda.Pulse)
-	filteredPulsesByLogic := make(chan sonda.Pulse)
+	//filteredPulsesByTimes := make(chan sonda.Pulse)
+	//filteredPulsesByLogic := make(chan sonda.Pulse)
 
-	go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
-	go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
+
+	//go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
+	//go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
 	go printResults(&webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
 
-	for p := range filteredPulsesByLogic {
+	//for p := range filteredPulsesByLogic {
+	for p := range gpio.Channel {
 
 		fmt.Print(p.String());
 
