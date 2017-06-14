@@ -31,7 +31,7 @@ func MaxSpeed(s *[]float32) float32 {
 	return max
 }
 
-func AverageDirection(d *[]float32) int {
+func AverageDirection(d *[]int) int {
 	if(len(*d) == 0) {
 		return 0
 	}
