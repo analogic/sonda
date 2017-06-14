@@ -20,7 +20,9 @@ import (
 var speedPulsesCounter int
 var speedPulsesOnlyDelay int
 var directionPulsesCounter int
+
 var direction int
+var speed float32
 
 var speeds []float32
 var directions []int
@@ -66,7 +68,7 @@ func main() {
 				// we have got start
 				direction = ((directionPulsesCounter * 10) + 70 + 180) % 360
 				directionPulsesCounter = 0
-				fmt.Printf(" direction %v\n\n", direction)
+				fmt.Printf("\r\r\033[1;34mdirection %v°, speed %vm/s\033[0m\n\n", direction, speed)
 			}
 			speedPulsesOnlyDelay = 0
 
@@ -102,7 +104,7 @@ func printResults(w *sonda.WebServer) {
 	for {
 		time.Sleep(time.Second * 1)
 
-		speed := (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
+		speed = (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
 		//fmt.Printf("\n\033[1;34m%vm/s, %v°\033[0m\n", speed, direction)
 
 		speeds = append(speeds, speed)
