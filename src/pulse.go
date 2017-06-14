@@ -24,7 +24,7 @@ func (p *Pulse) String() string {
 	}
 
 	if p.Long {
-		return "█"
+		return "▇"
 	} else {
 		return "▄"
 	}

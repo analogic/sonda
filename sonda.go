@@ -82,7 +82,7 @@ func main() {
 			speedPulsesOnlyDelay++
 
 			if previous.Long != true {
-				fmt.Print(" ")
+				fmt.Print("▁")
 			}
 		}
 
