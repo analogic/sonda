@@ -18,6 +18,7 @@ import (
 )
 
 var speedPulsesCounter int
+var speedPulsesOnlyDelay int
 var directionPulsesCounter int
 var direction int
 
@@ -50,6 +51,8 @@ func main() {
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
 
+	speedPulsesOnlyDelay = 0
+
 	//for p := range filteredPulsesByLogic {
 	for p := range gpio.Channel {
 
@@ -61,9 +64,19 @@ func main() {
 
 		if p.Long {
 			directionPulsesCounter++
+
+			if(speedPulsesOnlyDelay > 1) {
+				// we have got start
+				fmt.Println("")
+			}
+			speedPulsesOnlyDelay = 0
 		} else {
 			speedPulsesCounter++
+			speedPulsesOnlyDelay++
 		}
+
+
+
 
 		if speedPulsesCounter == 36 {
 			newDirection := ((directionPulsesCounter * 10) + 70 + 180) % 360
