@@ -37,6 +37,7 @@ func (g *GPIO) initSpeed() {
 	g.digitalSpeedPin.ActiveLow(false)
 
 	err = g.digitalSpeedPin.Watch(embd.EdgeRising, func(speed embd.DigitalPin) {
+		time.Sleep(1 * time.Millisecond) // we need speed pulse come always after direction pulse
 		g.Channel <- Pulse{Long: false, At: time.Now()}
 	})
 	if err != nil {
