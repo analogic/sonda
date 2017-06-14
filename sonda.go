@@ -87,6 +87,7 @@ func main() {
 		}
 
 		fmt.Print(p.String());
+		fmt.Printf("<%v>", p.At.Sub(previous.At).Nanoseconds());
 
 		/*
 		if speedPulsesCounter == 36 {
