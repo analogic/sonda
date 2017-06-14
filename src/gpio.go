@@ -93,7 +93,8 @@ func (g *GPIO) initTogether() {
 		now := time.Now()
 		g.Channel <- Pulse{Long: false, At: now}
 		time.Sleep(1 * time.Millisecond) // we need speed pulse come always after direction pulse
-		if g.digitalDirectionPin.Read() == 1 {
+		dir, _ := g.digitalDirectionPin.Read()
+		if  dir == 1 {
 			g.Channel <- Pulse{Long: true, At: now}
 		}
 	})
