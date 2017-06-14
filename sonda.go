@@ -32,7 +32,7 @@ func main() {
 
 	fmt.Println("Starting web server")
 
-	webServer := sonda.WebServer{Port: 8080}
+	webServer := sonda.WebServer{Port: 80}
 	go webServer.Init()
 
 	fmt.Println("GPIO init")
