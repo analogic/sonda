@@ -97,7 +97,7 @@ func printResults(w *sonda.WebServer) {
 		w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
 		threeSecSpeedPulsesCounter = 0
 
-		if(counter == 60) {
+		if(counter == 20) {
 			printAverages(w)
 			counter = 0
 		}
