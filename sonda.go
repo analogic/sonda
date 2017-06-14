@@ -64,11 +64,11 @@ func main() {
 		//}
 
 		if p.Long {
-			if(speedPulsesOnlyDelay > 1) {
+			if(speedPulsesOnlyDelay > 1 || speedPulsesOnlyDelay > 35) {
 				// we have got start
 				direction = ((directionPulsesCounter * 10) + 70 + 180) % 360
+				fmt.Printf(" \t\t\033[1;34m(s: %v, l: %v)direction %v°, speed %vm/s\033[0m\n\n", speedPulsesCounter, directionPulsesCounter, direction, speed)
 				directionPulsesCounter = 0
-				fmt.Printf(" \t\t\033[1;34mdirection %v°, speed %vm/s\033[0m\n\n", direction, speed)
 			}
 			speedPulsesOnlyDelay = 0
 
