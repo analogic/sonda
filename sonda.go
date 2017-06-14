@@ -67,7 +67,7 @@ func main() {
 		}
 
 		if speedPulsesCounter == 36 {
-			newDirection := ((directionPulsesCounter * 10) + 70 + 180) % 360
+			newDirection := float32(((directionPulsesCounter * 10) + 70 + 180) % 360)
 
 			////if (newDirection == 80 || newDirection == 60 || newDirection == 70) && direction > 140 {
 				// do nothing, anemometr bug
@@ -117,7 +117,7 @@ func printAverages(w *sonda.WebServer) {
 	fmt.Print(w.DataJson)
 
 	speeds = []float32{}
-	directions = []int{}
+	directions = []float32{}
 }
 
 func raspiLoad() float64 {
