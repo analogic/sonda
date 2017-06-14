@@ -30,7 +30,7 @@ func main() {
 
 	fmt.Println("Starting web server")
 
-	webServer := sonda.WebServer{Port: 80}
+	webServer := sonda.WebServer{Port: 8080}
 	go webServer.Init()
 
 	fmt.Println("GPIO init")
@@ -56,11 +56,9 @@ func main() {
 	//for p := range filteredPulsesByLogic {
 	for p := range gpio.Channel {
 
-		fmt.Print(p.String());
-
-		if p.Invalid {
-			continue
-		}
+		//if p.Invalid {
+		//	continue
+		//}
 
 		if p.Long {
 			directionPulsesCounter++
@@ -75,8 +73,7 @@ func main() {
 			speedPulsesOnlyDelay++
 		}
 
-
-
+		fmt.Print(p.String());
 
 		if speedPulsesCounter == 36 {
 			newDirection := ((directionPulsesCounter * 10) + 70 + 180) % 360
