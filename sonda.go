@@ -86,7 +86,7 @@ func main() {
 			}
 		}
 
-		fmt.Printf("<%v>", int64(p.At.Sub(previous.At).Nanoseconds()/1000));
+		//fmt.Printf("<%v>", int64(p.At.Sub(previous.At).Nanoseconds()/1000));
 		fmt.Print(p.String());
 
 
