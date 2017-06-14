@@ -62,13 +62,15 @@ func main() {
 		//}
 
 		if p.Long {
-			directionPulsesCounter++
-
 			if(speedPulsesOnlyDelay > 1) {
 				// we have got start
-				fmt.Println("")
+				direction = ((directionPulsesCounter * 10) + 70 + 180) % 360
+
+				fmt.Sprintf(" direction %v\n", direction)
 			}
 			speedPulsesOnlyDelay = 0
+
+			directionPulsesCounter++
 		} else {
 			speedPulsesCounter++
 			speedPulsesOnlyDelay++
@@ -80,6 +82,7 @@ func main() {
 
 		fmt.Print(p.String());
 
+		/*
 		if speedPulsesCounter == 36 {
 			newDirection := ((directionPulsesCounter * 10) + 70 + 180) % 360
 
@@ -88,7 +91,7 @@ func main() {
 			////} else {
 				direction = newDirection
 			///}
-		}
+		}*/
 
 		previous = p
 	}
