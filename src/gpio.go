@@ -20,11 +20,53 @@ func (g *GPIO) Init() {
 	if err := embd.InitGPIO(); err != nil {
 		panic(err)
 	}
-	g.initSpeed()
-	g.initDirection()
+	//g.initSpeed()
+	//g.initDirection()
+	g.initTogether()
 }
+//
+//func (g *GPIO) initSpeed() {
+//	var err error
+//	g.digitalSpeedPin, err = embd.NewDigitalPin(g.SpeedPin)
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	if err := g.digitalSpeedPin.SetDirection(embd.In); err != nil {
+//		panic(err)
+//	}
+//	g.digitalSpeedPin.ActiveLow(false)
+//
+//	err = g.digitalSpeedPin.Watch(embd.EdgeRising, func(speed embd.DigitalPin) {
+//		time.Sleep(5 * time.Millisecond) // we need speed pulse come always after direction pulse
+//		g.Channel <- Pulse{Long: false, At: time.Now()}
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
+//}
+//
+//func (g *GPIO) initDirection() {
+//	var err error
+//	g.digitalDirectionPin, err = embd.NewDigitalPin(g.DirectionPin)
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	if err := g.digitalDirectionPin.SetDirection(embd.In); err != nil {
+//		panic(err)
+//	}
+//	g.digitalDirectionPin.ActiveLow(false)
+//
+//	err = g.digitalDirectionPin.Watch(embd.EdgeRising, func(direction embd.DigitalPin) {
+//		g.Channel <- Pulse{Long: true, At: time.Now()}
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
+//}
 
-func (g *GPIO) initSpeed() {
+func (g *GPIO) initTogether() {
 	var err error
 	g.digitalSpeedPin, err = embd.NewDigitalPin(g.SpeedPin)
 	if err != nil {
@@ -36,17 +78,7 @@ func (g *GPIO) initSpeed() {
 	}
 	g.digitalSpeedPin.ActiveLow(false)
 
-	err = g.digitalSpeedPin.Watch(embd.EdgeRising, func(speed embd.DigitalPin) {
-		time.Sleep(1 * time.Millisecond) // we need speed pulse come always after direction pulse
-		g.Channel <- Pulse{Long: false, At: time.Now()}
-	})
-	if err != nil {
-		panic(err)
-	}
-}
 
-func (g *GPIO) initDirection() {
-	var err error
 	g.digitalDirectionPin, err = embd.NewDigitalPin(g.DirectionPin)
 	if err != nil {
 		panic(err)
@@ -57,12 +89,18 @@ func (g *GPIO) initDirection() {
 	}
 	g.digitalDirectionPin.ActiveLow(false)
 
-	err = g.digitalDirectionPin.Watch(embd.EdgeRising, func(direction embd.DigitalPin) {
-		g.Channel <- Pulse{Long: true, At: time.Now()}
+	err = g.digitalSpeedPin.Watch(embd.EdgeRising, func(direction embd.DigitalPin) {
+		now := time.Now()
+		g.Channel <- Pulse{Long: false, At: now}
+		time.Sleep(1 * time.Millisecond) // we need speed pulse come always after direction pulse
+		if g.digitalDirectionPin.Read() == 1 {
+			g.Channel <- Pulse{Long: true, At: now}
+		}
 	})
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 func (g *GPIO) Stop() {
