@@ -111,7 +111,7 @@ func printResultsThread(w *sonda.WebServer) {
 		for {
 			select {
 				case <-ticker.C:
-					printCurrent(&w);
+					printCurrent(w);
 			}
 		}
 	} ()
@@ -121,7 +121,7 @@ func printResultsThread(w *sonda.WebServer) {
 		for {
 			select {
 			case <-ticker2.C:
-				printAverages(&w);
+				printAverages(w);
 			}
 		}
 	} ()
