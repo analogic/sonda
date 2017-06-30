@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-
+	"time"
 	"github.com/gorilla/websocket"
 	"fmt"
 )
@@ -28,7 +28,13 @@ func (w *WebServer) Init() {
 	http.HandleFunc("/", w.home)
 	go w.initWebSocket()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", w.Port), nil))
+	s := http.Server{
+    Addr:           fmt.Sprintf("0.0.0.0:%v", w.Port),
+    ReadTimeout:    10 * time.Second,
+    WriteTimeout:   10 * time.Second,
+    }
+
+	log.Fatal(s.ListenAndServe())
 
 }
 
