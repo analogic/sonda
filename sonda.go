@@ -48,7 +48,7 @@ func main() {
 	//go sonda.FilterPulsesByTimes(gpio.Channel, filteredPulsesByTimes)
 	//go sonda.FilterPulsesByLogic(filteredPulsesByTimes, filteredPulsesByLogic)
 
-	go printResults(&webServer)
+	go printResultsThread(&webServer)
 
 	speedPulsesCounter = 0
 	directionPulsesCounter = 0
@@ -105,28 +105,39 @@ func main() {
 	}
 }
 
-func printResults(w *sonda.WebServer) {
-	counter := 0
-	for {
-		time.Sleep(time.Second * 1)
-
-		speed = (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
-		//fmt.Printf("\n\033[1;34m%vm/s, %v°\033[0m\n", speed, direction)
-
-		speeds = append(speeds, speed)
-		directions = append(directions, direction)
-
-		w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
-
-		speedPulsesCounter = 0
-		//directionPulsesCounter = 0
-
-		if(counter == 60) {
-			printAverages(w)
-			counter = 0
+func printResultsThread(w *sonda.WebServer) {
+	ticker := time.NewTicker(1 * time.Second)
+	go func() {
+		for {
+			select {
+				case <-ticker.C:
+					printCurrent(&w);
+			}
 		}
-		counter++
-	}
+	} ()
+
+	ticker2 := time.NewTicker(60 * time.Second)
+	go func() {
+		for {
+			select {
+			case <-ticker2.C:
+				printAverages(&w);
+			}
+		}
+	} ()
+}
+
+func printCurrent(w *sonda.WebServer) {
+	speed = (float32(speedPulsesCounter) * (float32(30) / float32(1500)))
+	//fmt.Printf("\n\033[1;34m%vm/s, %v°\033[0m\n", speed, direction)
+
+	speeds = append(speeds, speed)
+	directions = append(directions, direction)
+
+	w.WebSocket <- fmt.Sprintf("{\"direction_current\": %v, \"speed_current\": %v}", direction, speed)
+
+	speedPulsesCounter = 0
+	//directionPulsesCounter = 0
 }
 
 func printAverages(w *sonda.WebServer) {
